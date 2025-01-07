@@ -7,6 +7,8 @@ import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class ArticleTests extends CoreTestCase
 {
     @Test

@@ -118,9 +118,16 @@ public class MainPageObject {
         }
     }
 
+//    public WebElement waitForElementPresent(String locator, String error_message, long timeoutInSeconds) {
+//        By by = this.getLocatorByString(locator);
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds)); // Перевод секунд в миллисекунды
+//        wait.withMessage(error_message + "\n");
+//        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+//    }
+
     public WebElement waitForElementPresent(String locator, String error_message, long timeoutInSeconds) {
         By by = this.getLocatorByString(locator);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds)); // Перевод секунд в миллисекунды
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds); // Перевод секунд в миллисекунды
         wait.withMessage(error_message + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
@@ -150,7 +157,7 @@ public class MainPageObject {
 
     public boolean waitForElementNotPresent(String locator, String error_message, long timeoutInSeconds) {
         By by = this.getLocatorByString(locator);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds); // Перевод секунд в миллисекунды
         wait.withMessage(error_message + "\n");
         return wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(by)
