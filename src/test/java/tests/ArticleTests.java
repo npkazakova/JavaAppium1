@@ -13,7 +13,7 @@ public class ArticleTests extends CoreTestCase
 {
     @Test
     public void testCompareArticleDescription() {
- 
+
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
 

@@ -84,22 +84,32 @@ public class MainPageObject {
             int right_x = left_x + size.getWidth();
             int upper_y = location.getY();
             int lower_y = upper_y + size.getHeight();
-            //int middle_y = upper_y + (size.getHeight() / 2);
             int middle_y = location.getY() + (size.getHeight() / 2);
 
-            //TouchAction action = new TouchAction(driver);
-            TouchAction action = new TouchAction((PerformsTouchActions) driver);
-            action.press(PointOption.point(right_x, middle_y))
-                    .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)));
-
             if (Platform.getInstance().isAndroid()) {
-                action.moveTo(PointOption.point(left_x, middle_y));
+                // Для Android можно использовать TouchAction
+                TouchAction action = new TouchAction((PerformsTouchActions) driver);
+                action.press(PointOption.point(right_x, middle_y))
+                        .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)))
+                        .moveTo(PointOption.point(left_x, middle_y))
+                        .release()
+                        .perform();
             } else {
-                int offset_x = -element.getSize().getWidth();
-                action.moveTo(PointOption.point(offset_x, 0));
-            }
+                // Для iOS используем W3C Actions API
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence swipe = new Sequence(finger, 0);
 
-            action.release().perform();
+                // Нажатие в начальной точке
+                swipe.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), right_x, middle_y));
+                swipe.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+
+                // Перемещение к конечной точке
+                swipe.addAction(finger.createPointerMove(Duration.ofMillis(300), PointerInput.Origin.viewport(), left_x, middle_y));
+                swipe.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+
+                // Выполнение действия
+                ((AppiumDriver<?>) driver).perform(Arrays.asList(swipe));
+            }
         } else {
             System.out.println("Method swipeElementToLeft() does nothing for platform " + Platform.getInstance().getPlatformVar());
         }
@@ -175,7 +185,6 @@ public class MainPageObject {
         }
 
     }
-
 
     public int getAmountOfElements(String locator)
     {

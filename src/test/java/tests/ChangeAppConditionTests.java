@@ -20,7 +20,9 @@ public class ChangeAppConditionTests extends CoreTestCase {
         String search_line = "Java";
         String article_title = "Java (programming language)";
 
-        SearchPageObject.clickSkipButton();
+        if (!isPlatformIOS()) {
+            SearchPageObject.clickSkipButton();
+        }
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine(search_line);
         SearchPageObject.clickByArticleWithSubstring(article_title);
@@ -54,7 +56,9 @@ public class ChangeAppConditionTests extends CoreTestCase {
         String search_line = "Java";
         String article_title = "Java (programming language)";
 
-        SearchPageObject.clickSkipButton();
+        if (!isPlatformIOS()) {
+            SearchPageObject.clickSkipButton();
+        }
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine(search_line);
         SearchPageObject.waitForSearchResult(article_title);
