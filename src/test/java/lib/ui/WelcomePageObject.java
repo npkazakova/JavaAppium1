@@ -7,7 +7,7 @@ public class WelcomePageObject extends MainPageObject
     private static final String
 
 
-        STEP_LEARN_MORE_LINK = "xpath://*[@name='Learn more about Wikipedia']",
+        STEP_LEARN_MORE_LINK = "xpath://XCUIElementTypeStaticText[@name='Learn more about Wikipedia']",
         STEP_NEW_WAYS_TO_EXPLORE_TEXT = "id:New ways to explore",
         STEP_ADD_OR_EDIT_PREFERRED_LANG = "xpath://*[@name='Add or edit preferred languages']",
         STEP_LEARN_MORE_ABOUT_OUR_PRIVACY = "xpath://*[@name='Learn more about our privacy policy and terms of use']",

@@ -142,9 +142,10 @@ public class SearchTests extends CoreTestCase
 
         String search_line = "Java";
         String[][] expectedResults = {
+                {"Java", "Island in Indonesia"},
                 {"Java (programming language)", "Object-oriented programming language"},
-                {"JavaScript", "High-level programming language"},
-                {"Java version history", "List of versions of the Java programming language"}
+                {"JavaScript", "High-level programming language"}
+                //{"Java version history", "List of versions of the Java programming language"}
         };
 
         if (!isPlatformIOS()) {

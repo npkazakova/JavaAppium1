@@ -48,6 +48,8 @@ public abstract class ArticlePageObject extends MainPageObject
         return ANDROID_ARTICLE_DESCRIPTION_TPL.replace("{SUBSTRING}", substring);
     }
 
+
+
 //    public static String getArticleAddedToReadingList(String substring)
 //    {
 //        return IOS_ARTICLE_ADDED_TO_READING_LIST.replace("{SUBSTRING}", substring);
@@ -101,8 +103,7 @@ public abstract class ArticlePageObject extends MainPageObject
         this.assertElementPresent(getArticleDescription(description), "Description is not present on the article page");
     }
 
-    public String getArticleDescription()
-    {
+    public String getArticleDescription() {
         WebElement description_element = waitForDescriptionElement();
         if (Platform.getInstance().isAndroid()) {
             return description_element.getAttribute("text");
@@ -114,9 +115,8 @@ public abstract class ArticlePageObject extends MainPageObject
     public void swipeToFooter()
     {
         if(Platform.getInstance().isAndroid()){
-            this.swipeUpToFindElement(FOOTER_ELEMENT,
-                    "Cannot find the end of the article",
-                    40);
+            this.swipeUpFiveTimesAndFindElement(FOOTER_ELEMENT,
+                    "Cannot find the end of the article");
         } else {
             this.scrollUpTillElementAppear(FOOTER_ELEMENT,
                     "Cannot find the end of the article",

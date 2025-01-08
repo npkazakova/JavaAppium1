@@ -84,37 +84,89 @@ public class MainPageObject {
             int right_x = left_x + size.getWidth();
             int upper_y = location.getY();
             int lower_y = upper_y + size.getHeight();
-            //int middle_y = upper_y + (size.getHeight() / 2);
             int middle_y = location.getY() + (size.getHeight() / 2);
 
-            //TouchAction action = new TouchAction(driver);
-            TouchAction action = new TouchAction((PerformsTouchActions) driver);
-            action.press(PointOption.point(right_x, middle_y))
-                    .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)));
-
             if (Platform.getInstance().isAndroid()) {
-                action.moveTo(PointOption.point(left_x, middle_y));
+                // Для Android можно использовать TouchAction
+                TouchAction action = new TouchAction((PerformsTouchActions) driver);
+                action.press(PointOption.point(right_x, middle_y))
+                        .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)))
+                        .moveTo(PointOption.point(left_x, middle_y))
+                        .release()
+                        .perform();
             } else {
-                int offset_x = -element.getSize().getWidth();
-                action.moveTo(PointOption.point(offset_x, 0));
-            }
+                // Для iOS используем W3C Actions API
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+                Sequence swipe = new Sequence(finger, 0);
 
-            action.release().perform();
+                // Нажатие в начальной точке
+                swipe.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), right_x, middle_y));
+                swipe.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+
+                // Перемещение к конечной точке
+                swipe.addAction(finger.createPointerMove(Duration.ofMillis(300), PointerInput.Origin.viewport(), left_x, middle_y));
+                swipe.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+
+                // Выполнение действия
+                ((AppiumDriver<?>) driver).perform(Arrays.asList(swipe));
+            }
         } else {
             System.out.println("Method swipeElementToLeft() does nothing for platform " + Platform.getInstance().getPlatformVar());
         }
     }
 
+    public void swipeUpFiveTimes() {
+        for (int i = 0; i < 5; i++) {
+            swipeUp();
+        }
+    }
+
+    private void swipeUp() {
+        if (driver instanceof AppiumDriver) {
+            int screenWidth = driver.manage().window().getSize().width;
+            int screenHeight = driver.manage().window().getSize().height;
+
+            int startX = screenWidth / 2;  // Середина экрана по ширине
+            int startY = (int) (screenHeight * 0.8); // 80% высоты экрана
+            int endY = (int) (screenHeight * 0.2);   // 20% высоты экрана
+
+            TouchAction action = new TouchAction((PerformsTouchActions) driver);
+            action.press(PointOption.point(startX, startY))
+                    .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)))
+                    .moveTo(PointOption.point(startX, endY))
+                    .release()
+                    .perform();
+        } else {
+            System.out.println("Swipe action is not supported for the current driver.");
+        }
+    }
+
+    public void swipeUpFiveTimesAndFindElement(String locator, String error_message) {
+        By by = this.getLocatorByString(locator);
+
+        // Выполняем свайп 5 раз
+        for (int i = 0; i < 5; i++) {
+            scroll(25); // Время свайпа в миллисекундах
+        }
+
+        // После 5 свайпов пытаемся найти элемент
+        if (driver.findElements(by).size() == 0) {
+            waitForElementPresent(locator, "Cannot find element after 5 swipes. \n" + error_message, 0);
+        }
+    }
+
+
+    //    НЕ УДАЛЯТЬ! МОЖЕТ ПОТОМ ПРИГОДИТЬСЯ
     public void swipeUpToFindElement(String locator, String error_message, int max_swipes) {
         By by = this.getLocatorByString(locator);
         int already_swiped = 0;
         while (driver.findElements(by).size() == 0) {
-
+            already_swiped++;
+            scroll(25);
             if (already_swiped > max_swipes) {
                 waitForElementPresent(locator, "Cannot find element by swipping up. \n" + error_message, 0);
                 return;
             }
-
         }
     }
 
@@ -176,7 +228,6 @@ public class MainPageObject {
 
     }
 
-
     public int getAmountOfElements(String locator)
     {
         By by = this.getLocatorByString(locator);
@@ -237,7 +288,7 @@ public class MainPageObject {
         }
     }
 
-            public void scrollUpTillElementAppear(String locator, String error_message, int max_swipes)
+    public void scrollUpTillElementAppear(String locator, String error_message, int max_swipes)
     {
         int already_swiped = 0;
         while (!this.isElementLocatedOnTheScreen(locator)){

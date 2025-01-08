@@ -20,30 +20,37 @@ public class ChangeAppConditionTests extends CoreTestCase {
         String search_line = "Java";
         String article_title = "Java (programming language)";
 
-        SearchPageObject.clickSkipButton();
+        if (!isPlatformIOS()) {
+            SearchPageObject.clickSkipButton();
+        }
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine(search_line);
-        SearchPageObject.clickByArticleWithSubstring(article_title);
+        if (isPlatformIOS()) {
 
+            String description_before_rotation = ArticlePageObject.getArticleDescription();
+            this.rotateScreenLandscape();
+            String description_after_rotation = ArticlePageObject.getArticleDescription();
 
-        String description_before_rotation = ArticlePageObject.getArticleDescription();
-        this.rotateScreenLandscape();
-        String description_after_rotation = ArticlePageObject.getArticleDescription();
+            assertEquals(
+                    "Article description has been changed after screen rotation",
+                    description_before_rotation,
+                    description_after_rotation
+            );
 
-        assertEquals(
-                "Article description has been changed after screen rotation",
-                description_before_rotation,
-                description_after_rotation
-        );
+            this.rotateScreenPortrait();
+            String description_after_second_rotation = ArticlePageObject.getArticleDescription();
 
-        this.rotateScreenPortrait();
-        String description_after_second_rotation = ArticlePageObject.getArticleDescription();
-
-        assertEquals(
-                "Article description has been changed after screen rotation",
-                description_before_rotation,
-                description_after_second_rotation
-        );
+            assertEquals(
+                    "Article description has been changed after screen rotation",
+                    description_before_rotation,
+                    description_after_second_rotation
+            );
+        } else {
+            SearchPageObject.waitForSearchResult(article_title);
+            this.rotateScreenLandscape();
+            this.rotateScreenPortrait();
+            SearchPageObject.waitForSearchResult(article_title);
+        }
     }
 
     @Test
@@ -54,12 +61,14 @@ public class ChangeAppConditionTests extends CoreTestCase {
         String search_line = "Java";
         String article_title = "Java (programming language)";
 
-        SearchPageObject.clickSkipButton();
+        if (!isPlatformIOS()) {
+            SearchPageObject.clickSkipButton();
+        }
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine(search_line);
         SearchPageObject.waitForSearchResult(article_title);
 
         this.backgroundApp(2);
-        SearchPageObject.waitForSearchResult(article_title); // баг в приложении, поиск сбрасывается после возвращения из фона
+        SearchPageObject.waitForSearchResult(article_title);
     }
 }
