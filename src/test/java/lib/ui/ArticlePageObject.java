@@ -112,18 +112,6 @@ public abstract class ArticlePageObject extends MainPageObject
         }
     }
 
-
-//    НЕ УДАЛЯТЬ! МОЖЕТ ПОТОМ ПРИГОДИТЬСЯ
-//    public String getArticleDescription()
-//    {
-//        WebElement description_element = waitForDescriptionElement();
-//        if (Platform.getInstance().isAndroid()) {
-//            return description_element.getAttribute("text");
-//        } else {
-//            return description_element.getAttribute("name");
-//        }
-//    }
-
     public void swipeToFooter()
     {
         if(Platform.getInstance().isAndroid()){
