@@ -6,9 +6,10 @@ import lib.ui.ArticlePageObject;
 public class AndroidArticlePageObject extends ArticlePageObject {
 
     static {
-        ANDROID_ARTICLE_DESCRIPTION = "org.wikipedia:id/page_contents_container";
-        ANDROID_ARTICLE_DESCRIPTION_TPL = "xpath://*[@resource-id='pcs-edit-section-title-description'][contains(@text,'{SUBSTRING}')]";
-        FOOTER_ELEMENT = "xpath://*[@text='View article in browser']";
+        //ANDROID_ARTICLE_DESCRIPTION = "org.wikipedia:id/page_contents_container";
+        ANDROID_ARTICLE_DESCRIPTION = "id:org.wikipedia:id/page_web_view";
+        ANDROID_ARTICLE_DESCRIPTION_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_description'][contains(@text,'{SUBSTRING}')]";
+        FOOTER_ELEMENT = "id:org.wikipedia:id/page_web_view";
         SAVE_BUTTON = "xpath://*[contains(@text, 'Save')]";
         NAVIGATE_UP_BUTTON = "xpath://android.widget.ImageButton[@content-desc='Navigate up']";
         SAVED_BUTTON = "xpath://android.widget.FrameLayout[@content-desc='Saved']";

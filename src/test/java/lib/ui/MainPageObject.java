@@ -115,16 +115,58 @@ public class MainPageObject {
         }
     }
 
+    public void swipeUpFiveTimes() {
+        for (int i = 0; i < 5; i++) {
+            swipeUp();
+        }
+    }
+
+    private void swipeUp() {
+        if (driver instanceof AppiumDriver) {
+            int screenWidth = driver.manage().window().getSize().width;
+            int screenHeight = driver.manage().window().getSize().height;
+
+            int startX = screenWidth / 2;  // Середина экрана по ширине
+            int startY = (int) (screenHeight * 0.8); // 80% высоты экрана
+            int endY = (int) (screenHeight * 0.2);   // 20% высоты экрана
+
+            TouchAction action = new TouchAction((PerformsTouchActions) driver);
+            action.press(PointOption.point(startX, startY))
+                    .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)))
+                    .moveTo(PointOption.point(startX, endY))
+                    .release()
+                    .perform();
+        } else {
+            System.out.println("Swipe action is not supported for the current driver.");
+        }
+    }
+
+    public void swipeUpFiveTimesAndFindElement(String locator, String error_message) {
+        By by = this.getLocatorByString(locator);
+
+        // Выполняем свайп 5 раз
+        for (int i = 0; i < 5; i++) {
+            scroll(25); // Время свайпа в миллисекундах
+        }
+
+        // После 5 свайпов пытаемся найти элемент
+        if (driver.findElements(by).size() == 0) {
+            waitForElementPresent(locator, "Cannot find element after 5 swipes. \n" + error_message, 0);
+        }
+    }
+
+
+    //    НЕ УДАЛЯТЬ! МОЖЕТ ПОТОМ ПРИГОДИТЬСЯ
     public void swipeUpToFindElement(String locator, String error_message, int max_swipes) {
         By by = this.getLocatorByString(locator);
         int already_swiped = 0;
         while (driver.findElements(by).size() == 0) {
-
+            already_swiped++;
+            scroll(25);
             if (already_swiped > max_swipes) {
                 waitForElementPresent(locator, "Cannot find element by swipping up. \n" + error_message, 0);
                 return;
             }
-
         }
     }
 
@@ -246,7 +288,7 @@ public class MainPageObject {
         }
     }
 
-            public void scrollUpTillElementAppear(String locator, String error_message, int max_swipes)
+    public void scrollUpTillElementAppear(String locator, String error_message, int max_swipes)
     {
         int already_swiped = 0;
         while (!this.isElementLocatedOnTheScreen(locator)){
